@@ -42,7 +42,6 @@ option(BUILD_PXSCENE_SHARED_LIB "BUILD_PXSCENE_SHARED_LIB" OFF)
 option(BUILD_PXSCENE_STATIC_LIB "BUILD_PXSCENE_STATIC_LIB" OFF)
 option(BUILD_PXWAYLAND_SHARED_LIB "BUILD_PXWAYLAND_SHARED_LIB" OFF)
 option(BUILD_PXWAYLAND_STATIC_LIB "BUILD_PXWAYLAND_STATIC_LIB" ON)
-option(BUILD_OPTIMUS_STATIC_LIB "BUILD_OPTIMUS_STATIC_LIB" OFF)
 option(BUILD_PXSCENE_WITH_NEXUS_SUPPORT "BUILD_PXSCENE_WITH_NEXUS_SUPPORT" OFF)
 option(BUILD_DEBUG_METRICS "BUILD_DEBUG_METRICS" OFF)
 option(BUILD_WITH_STATIC_NODE "BUILD_WITH_STATIC_NODE" OFF)
@@ -122,7 +121,7 @@ elseif (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
                   ${NODE_LIBRARIES}
                   ${DUKE_LIBRARIES}
              ${COMM_DEPS_LIBRARIES}
-             pthread rt dl m)
+             pthread rt dl)
 
     set(PXSCENE_APP_LIBRARIES ${PXSCENE_APP_LIBRARIES} pxCore rtCore_s)
 
@@ -355,12 +354,6 @@ if (BUILD_WITH_SERVICE_MANAGER)
     set(PXSCENE_COMMON_FILES ${PXSCENE_COMMON_FILES} pxServiceManager.cpp)
 endif (BUILD_WITH_SERVICE_MANAGER)
 
-if (BUILD_OPTIMUS_STATIC_LIB)
-    message("Building with Optimus support")
-    set(PXSCENE_APP_LIBRARIES ${PXSCENE_APP_LIBRARIES} optimus)
-    add_definitions(-DENABLE_OPTIMUS_SUPPORT)
-endif (BUILD_OPTIMUS_STATIC_LIB)
-
 if (BUILD_DEBUG_METRICS)
     message("Building with debug metrics")
     add_definitions(-DENABLE_DEBUG_METRICS)
@@ -413,10 +406,6 @@ if (BUILD_PXSCENE_APP)
             add_dependencies(pxscene_app pxscene)
         endif (BUILD_PXSCENE_SHARED_LIB OR BUILD_PXSCENE_SHARED_LIB)
     endif (PX_LIBRARY_SUPPORT GREATER 0)
-
-    if (BUILD_OPTIMUS_STATIC_LIB)
-      add_dependencies(pxscene_app optimus)
-    endif (BUILD_OPTIMUS_STATIC_LIB)
 
     if (PXSCENE_INSTALLER GREATER 0)
       if (WIN32)
@@ -523,11 +512,3 @@ if (PX_LIBRARY_SUPPORT GREATER 0)
 else ()
     message("Disabling build support for libraries")
 endif (PX_LIBRARY_SUPPORT GREATER 0)
-
-if (BUILD_OPTIMUS_STATIC_LIB)
-    message("Enabling Optimus library support")
-    add_library(optimus_static optimus_client.cpp)
-    add_library(optimus ALIAS optimus_static)
-    set_target_properties(optimus_static PROPERTIES OUTPUT_NAME "optimus")
-    target_compile_definitions(optimus_static PRIVATE ${PXSCENE_DEFINITIONS})
-endif(BUILD_OPTIMUS_STATIC_LIB)
