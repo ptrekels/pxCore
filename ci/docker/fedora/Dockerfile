@@ -15,7 +15,9 @@ RUN dnf copr -y enable dwrobel/node-shared
 RUN dnf install -y make diffutils unzip bash gawk which patch grep fedora-release info shadow-utils sed redhat-rpm-config tar rpm-build findutils util-linux gzip xz cpio coreutils bzip2
 
 # Spark dependencies (for both wayland and glut backends)
-RUN dnf install -y sudo node-shared-devel procps-ng gdb quilt ccache gcc-c++ libasan libtsan hostname gawk freeglut-devel glew-devel libgcrypt-devel bzip2-devel autoconf libtool cmake xorg-x11-drv-libinput-devel libcurl-devel libssh2-devel gnutls-devel libjpeg-turbo-devel turbojpeg-devel libpng-devel freetype-devel wayland-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libwayland-egl-devel libuuid-devel weston mesa-dri-drivers
+RUN dnf install -y sudo node8-shared-devel node-shared-devel procps-ng gdb quilt ccache gcc-c++ libasan libtsan hostname gawk freeglut-devel glew-devel libgcrypt-devel bzip2-devel autoconf libtool cmake xorg-x11-drv-libinput-devel libcurl-devel libssh2-devel gnutls-devel libjpeg-turbo-devel turbojpeg-devel libpng-devel freetype-devel wayland-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libwayland-egl-devel libuuid-devel
+# Test dependencies
+RUN dnf install -y weston mesa-dri-drivers freerdp
 
 ADD entrypoint.sh /
 
