@@ -1,10 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 mkdir -p build-wayland-egl
 pushd build-wayland-egl
 #export CC=clang
 #export CXX=clang++
 
 cmake \
+  -DPKG_CONFIG_DISABLE_NODE=OFF \
+  -DPKG_CONFIG_DISABLE_NODE8=ON \
   -DSUPPORT_NODE=ON \
   -DSUPPORT_DUKTAPE=ON \
   -DPXCORE_WAYLAND_DISPLAY_READ_EVENTS=ON \

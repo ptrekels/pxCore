@@ -1,10 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 #export CC=clang
 #export CXX=clang++
 
 mkdir -p build
 pushd build
 cmake \
+  -DPKG_CONFIG_DISABLE_NODE=OFF \
+  -DPKG_CONFIG_DISABLE_NODE8=ON \
   -DPXSCENE_COMPILE_WARNINGS_AS_ERRORS=OFF \
   -DPXCORE_COMPILE_WARNINGS_AS_ERRORS=OFF \
   -DSUPPORT_NODE=ON \
