@@ -32,8 +32,8 @@
 
     inline double pxMicroseconds()
     {
-        auto t_now = std::chrono::high_resolution_clock::now();
-        auto t_us = std::chrono::time_point_cast<std::chrono::microseconds>(t_now).time_since_epoch();
+        const auto t_now = std::chrono::steady_clock::now();
+        const auto t_us = std::chrono::time_point_cast<std::chrono::microseconds>(t_now).time_since_epoch();
         return t_us.count();
     }
 
