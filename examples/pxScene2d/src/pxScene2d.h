@@ -733,7 +733,6 @@ protected:
   bool mRepaint;
   #ifdef PX_DIRTY_RECTANGLES
   bool mIsDirty;
-  bool mIsTreeDirty;
   pxMatrix4f mLastRenderMatrix;
   pxRect mScreenCoordinates;
   pxRect mDirtyRect;

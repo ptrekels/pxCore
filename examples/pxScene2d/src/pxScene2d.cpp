@@ -542,7 +542,7 @@ pxObject::pxObject(pxScene2d* scene): rtObject(), mParent(NULL), mcx(0), mcy(0),
     mSnapshotRef(), mPainting(true), mClip(false), mMask(false), mDraw(true), mHitTest(true), mReady(),
     mFocus(false),mClipSnapshotRef(),mCancelInSet(true),mUseMatrix(false), mRepaint(true)
 #ifdef PX_DIRTY_RECTANGLES
-    , mIsDirty(true), mIsTreeDirty(true), mLastRenderMatrix(), mScreenCoordinates(), mDirtyRect()
+    , mIsDirty(true), mLastRenderMatrix(), mScreenCoordinates(), mDirtyRect()
 #endif //PX_DIRTY_RECTANGLES
     ,mDrawableSnapshotForMask(), mMaskSnapshot(), mIsDisposed(false)
   {
@@ -668,13 +668,6 @@ rtError pxObject::Set(const char* name, const rtValue* value)
 {
   #ifdef PX_DIRTY_RECTANGLES
   mIsDirty = true;
-  {
-    pxObject *_o = this;
-    while( _o && !_o->mIsTreeDirty ) {
-      _o->mIsTreeDirty = true;
-      _o = _o->mParent;
-    }
-  }
   //mScreenCoordinates = getBoundingRectInScreenCoordinates();
 
   #endif //PX_DIRTY_RECTANGLES
@@ -768,13 +761,6 @@ void pxObject::setParent(rtRef<pxObject>& parent)
       parent->mChildren.push_back(this);
 #ifdef PX_DIRTY_RECTANGLES
     mIsDirty = true;
-    {
-      pxObject *_o = this;
-      while( _o && !_o->mIsTreeDirty ) {
-        _o->mIsTreeDirty = true;
-        _o = _o->mParent;
-      }
-    }
     mScreenCoordinates = getBoundingRectInScreenCoordinates();
 #endif //PX_DIRTY_RECTANGLES
   }
@@ -1188,9 +1174,6 @@ void pxObject::update(double t)
 
 
   #ifdef PX_DIRTY_RECTANGLES
-  if( !mIsTreeDirty && mParent )       // nothing to update below
-      return;
-  mIsTreeDirty = false;
   pxMatrix4f m;
   applyMatrix(m);
   context.setMatrix(m);
@@ -1764,13 +1747,6 @@ bool pxObject::onTextureReady()
   repaintParents();
   #ifdef PX_DIRTY_RECTANGLES
   mIsDirty = true;
-  {
-    pxObject *_o = this;
-    while( _o && !_o->mIsTreeDirty ) {
-      _o->mIsTreeDirty = true;
-      _o = _o->mParent;
-    }
-  }
   #endif //PX_DIRTY_RECTANGLES
   return false;
 }
