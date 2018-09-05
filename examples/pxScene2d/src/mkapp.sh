@@ -4,14 +4,13 @@
 minJS=./jsMin.sh  #minify
 
 externalDir=../external
-appName=Spark
+APPNAME=Spark
 if [ "$TRAVIS_EVENT_TYPE" == "cron" ]
 then
-appName=SparkEdge
-else
-appName=Spark
+APPNAME=SparkEdge
 fi
-bundle=${appName}.app
+
+bundle=${APPNAME}.app
 bundleBin=$bundle/Contents/MacOS
 
 #bundleRes=$bundle/Contents/Resources
@@ -36,6 +35,7 @@ cp $externalDir/curl/lib/.libs/libcurl.4.dylib $bundleLib
 cp $externalDir/libnode-v6.9.0/out/Release/libnode*.dylib $bundleLib
 cp $externalDir/ft/objs/.libs/libfreetype.6.dylib $bundleLib
 cp $externalDir/jpg/.libs/libjpeg.9.dylib $bundleLib
+cp $externalDir/v8/out.gn/x64.release/*.bin $bundleBin
 
 # Copy OTHER to Bundle...
 #
@@ -61,15 +61,15 @@ cp package.json $bundleRes
 if [ "$TRAVIS_EVENT_TYPE" == "cron" ]  
 then
 echo "************ building edge"
-cp ${appName} $bundleBin/SparkEdge
+cp Spark $bundleBin/SparkEdge
 else
-cp ${appName} $bundleBin
+cp ${APPNAME} $bundleBin
 fi
 
 if [ "$TRAVIS_EVENT_TYPE" == "cron" ]  
 then
-  sed -i -e 's/\.\/pxscene/\.\/SparkEdge/g' macstuff/spark.sh
-  sed -i -e 's/pxscene.log /SparkEdge.log /g' macstuff/spark.sh
+  sed -i -e 's/\.\/Spark/\.\/SparkEdge/g' macstuff/spark.sh
+  sed -i -e 's/Spark.log /SparkEdge.log /g' macstuff/spark.sh
 fi
 
 cp macstuff/spark.sh $bundleBin
@@ -89,6 +89,10 @@ ${minJS} shell.js $bundleRes/shell.js
 ${minJS} browser.js $bundleRes/browser.js
 ${minJS} about.js $bundleRes/about.js
 ${minJS} browser/editbox.js $bundleRes/browser/editbox.js
+${minJS} test_binding.js $bundleRes/test_binding.js
+${minJS} test_module_loading.js $bundleRes/test_module_loading.js
+${minJS} test_module_binding.js $bundleRes/test_module_binding.js
+${minJS} test_promises.js $bundleRes/test_promises.js
 #./jsMinFolder.sh browser $bundleRes/browser
 
 
@@ -96,6 +100,9 @@ ${minJS} browser/editbox.js $bundleRes/browser/editbox.js
 cp -a duk_modules $bundleRes/duk_modules
 # Copy node modules
 cp -a node_modules $bundleRes/node_modules
+# Copy v8 modules
+cp -a v8_modules $bundleRes/v8_modules
+
 
 # Copy OTHER to Resources...
 #
